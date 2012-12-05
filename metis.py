@@ -19,10 +19,10 @@ from pymetis import part_graph
 points = np.array(mesh.points)
 elements = np.array(mesh.elements)
 
-vweights = points[:,1]**2
+vweights = points[:,0]**2
 
 cuts, part_vert = part_graph(2, adjacency,
-        #vweights=[int(x) for x in vweights]
+        #vweights=[int(20*x) for x in vweights]
         )
 
 pt.triplot(points[:, 0], points[:, 1], elements, color="black", lw=0.1)
