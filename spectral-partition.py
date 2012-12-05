@@ -1,35 +1,10 @@
 import numpy as np
-import meshpy.triangle as triangle
 from scipy.sparse import coo_matrix
 import scipy.sparse.linalg as sla
 import matplotlib.pyplot as pt
 
-# {{{ build US mesh
-
-outline = np.loadtxt("us-outline.dat")
-
-def round_trip_connect(start, end):
-    result = []
-    for i in range(start, end):
-        result.append((i, i+1))
-    result.append((end, start))
-    return result
-
-def needs_refinement(vertices, area):
-    vert_origin, vert_destination, vert_apex = vertices
-    bary_x = (vert_origin.x + vert_destination.x + vert_apex.x) / 3
-    bary_y = (vert_origin.y + vert_destination.y + vert_apex.y) / 3
-
-    dist_center = np.sqrt((bary_x-600)**2 + (750-bary_y)**2 )
-    max_area = 1 + 0.8*dist_center
-    return bool(area > max_area)
-
-
-info = triangle.MeshInfo()
-info.set_points(outline)
-info.set_facets(round_trip_connect(0, len(outline)-1))
-
-mesh = triangle.build(info, refinement_func=needs_refinement)
+from mesh import make_mesh
+mesh = make_mesh()
 
 points = np.array(mesh.points)
 elements = np.array(mesh.elements)
@@ -40,8 +15,6 @@ if 1:
 
     import sys
     sys.exit()
-
-# }}}
 
 # {{{ find connectivity
 
